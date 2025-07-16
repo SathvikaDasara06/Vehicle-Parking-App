@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Parking System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Admin Dashboard</h2>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Parking Lots</h5>
+                <h3>{{ total_lots }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Available Spots</h5>
+                <h3>{{ available_spots }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5 class="card-title">Occupied Spots</h5>
+                <h3>{{ occupied_spots }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <h3>{{ total_users }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('add_parking_lot') }}" class="btn btn-primary">Add New Parking Lot</a>
+                <a href="{{ url_for('admin_parking_lots') }}" class="btn btn-secondary">Manage Parking Lots</a>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-info">View Users</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parking Lots Overview -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Parking Lots Overview</h5>
+            </div>
+            <div class="card-body">
+                {% if lot_data %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Location</th>
+                                    <th>Total Spots</th>
+                                    <th>Available</th>
+                                    <th>Occupied</th>
+                                    <th>Price/Hour</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in lot_data %}
+                                <tr>
+                                    <td>{{ data.lot.prime_location_name }}</td>
+                                    <td>{{ data.lot.maximum_number_of_spots }}</td>
+                                    <td><span class="badge bg-success">{{ data.available }}</span></td>
+                                    <td><span class="badge bg-warning">{{ data.occupied }}</span></td>
+                                    <td>₹{{ data.lot.price }}</td>
+                                    <td>
+                                        <a href="{{ url_for('view_spot_status', lot_id=data.lot.id) }}" class="btn btn-sm btn-info">View Spots</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>No parking lots available. <a href="{{ url_for('add_parking_lot') }}">Add one now</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
